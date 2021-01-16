@@ -1,0 +1,56 @@
+<!DOCTYPE html><html>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Consolas;
+        font-size: 20px;
+
+    }
+    a:link {
+        color: #FFFFFF;
+        text-decoration: none;
+    }
+    a:visited {
+        text-decoration: none;
+        color: #FFFFFF;
+    }
+    a:hover {
+        text-decoration: none;
+        color: #666666;
+    }
+    a:active {
+        text-decoration: none;
+        color: #FFFFFF;
+    }
+</style>
+<body>
+    
+    <div id="news">
+    
+    </div>
+    
+    <script type="application/javascript">
+        function refreshFinances() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let jsonWar = JSON.parse(this.responseText);
+                    let buildHtml = `<table><tr><th>symbol</th><th>open</th><th>high</th><th>low</th><th>close</th><th>trend</th><th>change</th><th>change%</th><tr>`;
+                    for (let item in jsonWar) {
+                        buildHtml = buildHtml + `<tr><th>${jsonWar[item].symbol}</th><th>${Number(jsonWar[item].open).toFixed(4)}</th><th>${Number(jsonWar[item].high).toFixed(4)}</th><th>${Number(jsonWar[item].low).toFixed(4)}</th><th>${Number(jsonWar[item].close).toFixed(4)}</th><th>${jsonWar[item].trend}</th><th>${jsonWar[item].ch}</th><th>${jsonWar[item].chp}</th><tr>`;
+                    }
+                    buildHtml = buildHtml + `</table>`;
+                    news.innerHTML = buildHtml;
+                }
+            };
+            xhttp.open("GET", "/api?r=finances", true);
+            xhttp.send();
+            setTimeout(refreshFinances, 30000);
+        };
+        refreshFinances();
+    </script>
+</body>
+</html>
