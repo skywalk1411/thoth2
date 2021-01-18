@@ -9,7 +9,7 @@ let { refreshMetals, metals } = require('./export/metals');
 /*let { refreshRates, rates } = require('./export/rates'); */
 let { refreshEngines, yahoo } = require('./export/yahoo');
 let { bnBuffer } = require('./export/binance');
-let { refreshInvesting, investing, refreshTvTA, tvTA, tvApi } = require('./export/puppeteer');
+let {/* refreshInvesting, investing,*/ refreshTvTA, tvTA, tvApi } = require('./export/puppeteer');
 /*let { getCmc, coinmarketcap } = require('./export/coinmarketcap');*/
 consoled("init", `creating variables...`);
 if (settings.consoled.rss) {
@@ -32,10 +32,10 @@ if (settings.consoled.yahoo) {
     consoled("yahoo", `refreshing yahoo engines...`);
 }
 refreshEngines();
-if (settings.consoled.investing) {
+/*if (settings.consoled.investing) {
     consoled("investing", `refreshing puppeteer investing...`);
 }
-refreshInvesting();
+refreshInvesting();*/
 if (settings.consoled.tvTA) {
     consoled("tradingview",`refreshing puppeteer tradingview ta...`);
 }
@@ -47,10 +47,10 @@ getCmc("map1");*/
 let webService = {
     "engines": ["/", "/docs", "/api", "/public"],
     "api": [
-        "buffer", "24hrMiniTicker", "allsides", "coinmarketcap", "commodities", "crypto", "finances", "rates2", "forexes", "futures", "indices", "indexes", "investing", "metals", "war", "zerohedge", "tvta",
+        "buffer", "24hrMiniTicker", "allsides",  "crypto", "finances", "rates2", "forexes", "futures", "indices", "indexes", "metals", "zerohedge", "tvta", "alltvta", "weed" /*"coinmarketcap", "commodities", "investing","war", */
     ],
     "public": [
-        "index","index2.1","test", "war", "indices", "futures", "forexes"/*, "finances"*/
+        "index","test", "indices", "futures", "forexes"/*, "war", "finances"*/
     ],
 };
 var FAVICON = path.join(__dirname, 'public', 'favicon.ico');
@@ -109,6 +109,15 @@ const server = http.createServer(function (req, res) {
                     let payloadCheck = false;
                     let payloadConstruct = [];
                     switch (queryNameObj.r) {
+                        case "alltvta":
+                            payloadConstruct = {};
+                            for (let engine of tvApi.engines) {
+                                payloadConstruct[engine] = {};
+                                payloadConstruct[engine] = { ...tvTA[engine].c};
+                            }
+                            payloadData = JSON.stringify(payloadConstruct);
+                            payloadCheck = true;
+                            break;
                         case "tvta":
                             if (queryNameObj.s != null || queryNameObj.s != undefined) {
                                 if (tvApi.engines.indexOf(queryNameObj.s.toUpperCase()) !== -1) {
@@ -174,6 +183,12 @@ const server = http.createServer(function (req, res) {
                         case 'forexes':
                             payloadConstruct = {};
                             payloadConstruct = { ...yahoo["forexes"] };
+                            payloadData = JSON.stringify(payloadConstruct);
+                            payloadCheck = true;
+                            break;
+                        case 'weed':
+                            payloadConstruct = {};
+                            payloadConstruct = { ...yahoo["weed"] };
                             payloadData = JSON.stringify(payloadConstruct);
                             payloadCheck = true;
                             break;
