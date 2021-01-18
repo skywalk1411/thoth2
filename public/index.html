@@ -10,8 +10,12 @@
         color: white;
         font-family: Consolas;
         font-size: 14px;
-
+        border: 0;
+        text-align: center;
+        padding: 0;
+        margin: 0;
     }
+  
     a:link {
         color: #FFFFFF;
         text-decoration: none;
@@ -180,12 +184,12 @@
             <td width="10%" align="center">SILVER/USD</td>
             <td width="10%" align="center">PLATINUM/USD</td>
             <td width="10%" align="center">PALLADIUM/USD</td>
-            <td width="10%" align="center">CL-F</td>
-            <td width="10%" align="center">RB-F</td>
-            <td width="10%" align="center">HO-F</td>
-            <td width="10%" align="center">NG-F</td>
-            <td width="10%" align="center">LB-F</td>
-            <td width="10%" align="center">LE-F</td>
+            <td width="10%" align="center">Crude Oil</td>
+            <td width="10%" align="center">Gasoline</td>
+            <td width="10%" align="center">Heating Oil</td>
+            <td width="10%" align="center">Natural Gas</td>
+            <td width="10%" align="center">Lumber</td>
+            <td width="10%" align="center">Live Cattle</td>
         </tr>
         <tr>
             <td width="10%" id="gold" align="center"></td>
@@ -284,7 +288,7 @@
         function refreshRates() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
-                let forexes = ["USDCAD","USDEUR","USDGBP","USDJPY","USDRUB","USDCNY","USDHKD","USDAUD","USDCHF","USDNZD"];
+                let forexes = ["USDCAD", "USDEUR", "USDGBP", "USDJPY", "USDRUB", "USDCNY", "USDHKD", "USDAUD", "USDCHF", "USDNZD"];
                 if (this.readyState == 4 && this.status == 200) {
                     let json = JSON.parse(this.responseText);
                     for (let forex of forexes) {
@@ -338,7 +342,7 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let metals = ["gold","silver","platinum","palladium"];
+                    let metals = ["gold", "silver", "platinum", "palladium"];
                     let json = JSON.parse(this.responseText);
                     for (let metal of metals) {
                         let temp = `${Number(json[metal].close).toFixed(2)} (${json[metal].chp}%)`;
@@ -360,7 +364,7 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let futures = ["CL%3DF","RB%3DF","HO%3DF","NG%3DF","LB%3DF","LE%3DF"];
+                    let futures = ["CL%3DF", "RB%3DF", "HO%3DF", "NG%3DF", "LB%3DF", "LE%3DF"];
                     let json = JSON.parse(this.responseText);
                     for (let future of futures) {
                         let temp = `${Number(json[future].close).toFixed(2)} (${returnSymbol(json[future].trend)}${json[future].chp}%)`;
@@ -388,24 +392,41 @@
             }
             return symbol;
         };
+        function returnFixTA(pair) {
+            let temp = pair.slice(0, pair.length - 1).toUpperCase();
+            return temp;
+        };
+        let jsonTvTA;
         function refreshCrypto() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     let jsonCrypto = JSON.parse(this.responseText);
-                    let symbols = ["btcusdt","ethusdt","xrpusdt","dashusdt","ltcusdt","xmrusdt","adausdt","xlmusdt","linkusdt","dotusdt"];
-                    for (let symbol of symbols) {
-                        let temp =`${Number(jsonCrypto[symbol].close).toFixed(2)} (${returnSymbol(jsonCrypto[symbol].trend)}${Number(jsonCrypto[symbol].chp).toFixed(2)}%)`;
-                        if (jsonCrypto[symbol].trend === "bear") { document.getElementById(symbol).style.color = "firebrick"; }
-                        else if (jsonCrypto[symbol].trend === "bull") { document.getElementById(symbol).style.color = "forestgreen"; }
-                        else { document.getElementById(symbol).style.color = "darkorange"; }
-                        document.getElementById(symbol).innerHTML = temp;
-                    }
+                    let symbols = ["btcusdt", "ethusdt", "xrpusdt", "dashusdt", "ltcusdt", "xmrusdt", "adausdt", "xlmusdt", "linkusdt", "dotusdt"];
+                    function refreshTvTA() {
+                        let tvtas = ["BTCUSD", "ETHUSD", "XRPUSD", "DASHUSD", "LTCUSD", "LINKUSD", "DOTUSD", "XMRUSD", "ADAUSD", "XLMUSD"];
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                jsonTvTA = JSON.parse(this.responseText);
+                                for (let symbol of symbols) {
+                                    let temp = `${Number(jsonCrypto[symbol].close).toFixed(2)} (${returnSymbol(jsonCrypto[symbol].trend)}${Number(jsonCrypto[symbol].chp).toFixed(2)}%)<br>(${jsonTvTA[returnFixTA(symbol)].sells}/${jsonTvTA[returnFixTA(symbol)].neutrals}/${jsonTvTA[returnFixTA(symbol)].buys}) ${jsonTvTA[returnFixTA(symbol)].trend}`;
+                                    if (jsonCrypto[symbol].trend === "bear") { document.getElementById(symbol).style.color = "firebrick"; }
+                                    else if (jsonCrypto[symbol].trend === "bull") { document.getElementById(symbol).style.color = "forestgreen"; }
+                                    else { document.getElementById(symbol).style.color = "darkorange"; }
+                                    document.getElementById(symbol).innerHTML = temp;
+                                }
+                            }
+                        };
+                        xhttp.open("GET", "/api?r=alltvta", true);
+                        xhttp.send();
+                    };
+                    refreshTvTA();
                 }
             };
             xhttp.open("GET", "/api?r=crypto", true);
             xhttp.send();
-            setTimeout(refreshCrypto, 30000);
+            setTimeout(refreshCrypto, 10000);
         };
         refreshCrypto();
     </script>
