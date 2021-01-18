@@ -2,7 +2,7 @@
 const puppeteer = require('puppeteer');
 let { settings } = require('./settings');
 let { consoled } = require('./tools');
-let investingApi = {
+/*let investingApi = {
     "pushable": {
         "country": null,
         "name": null,
@@ -17,8 +17,8 @@ let investingApi = {
         "error": null,
         "retry": 0,
     },
-}
-let cmcApi = {
+}*/
+/*let cmcApi = {
     "pushable": {
         "status": null,
         "name": null,
@@ -33,14 +33,14 @@ let cmcApi = {
         "circulating_supply": null,
         "trend": null,
     },
-}
+}*/
 const tvApi = {
     "engines": ["BTCUSD", "ETHUSD", "XRPUSD", "DASHUSD", "LTCUSD", "LINKUSD", "DOTUSD", "XMRUSD", "ADAUSD", "XLMUSD"],
 }
-let cmc = {};
-let cmcCheck = false;
-let investing = {};
-let investingCheck = false;
+/*let cmc = {};
+let cmcCheck = false;*/
+/*let investing = {};
+let investingCheck = false;*/
 let tvTA = {};
 function envTV() {
     for (let engine in tvApi.engines) {
@@ -49,7 +49,7 @@ function envTV() {
 };
 envTV();
 
-function pushInvesting(content) {
+/*function pushInvesting(content) {
     for (let item in content.a) {
         if (investingCheck === false) {
             investing[item] = {};
@@ -59,7 +59,7 @@ function pushInvesting(content) {
         investing[item].status = "full";
     }
     investingCheck = true;
-};
+};*/
 function pushTA(symbol, data) {
     tvTA[symbol] = data;
 };
@@ -210,7 +210,7 @@ function fetchTvTA() {
 function refreshTvTA() {
     fetchTvTA();
 };
-function refreshInvesting() {
+/*function refreshInvesting() {
     (async function () {
         try {
             const browser = await puppeteer.launch();
@@ -246,12 +246,11 @@ function refreshInvesting() {
             setTimeout(refreshInvesting, settings.refresh.investing);
 
         } catch (e) {
-            //await browser.close();
             consoled('error:', `puppeteer investing ${e}, retrying...`);
             setTimeout(refreshInvesting, settings.retry.investing);
         }
     })();
-};
+};*/
 /*  .cmc-table > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(4) > div:nth-child(1) > a:nth-child(1)  */
 /*
 .cmc-table > tbody:nth-child(3) > tr:nth-child(101) > td:nth-child(3) > a:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > p:nth-child(2)
@@ -267,7 +266,7 @@ volumebtc: .cmc-table > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(8) >
 supply: .cmc-table > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(9) > div:nth-child(1) > div:nth-child(1) > p:nth-child(2)
 
 */
-function refreshCmc() {
+/*function refreshCmc() {
     (async function () {
         try {
             const browser = await puppeteer.launch();
@@ -276,26 +275,26 @@ function refreshCmc() {
                 width: 800,
                 height: 600,
             });
-            await page.goto('https://coinmarketcap.com/', { waitUntil: 'domcontentloaded' });
+            await page.goto('https://coinmarketcap.com/', { waitUntil: 'domcontentloaded' });*/
             //await page.waitForSelector('.cmc-table > tbody:nth-child(3) > tr:nth-child(100) > td:nth-child(4) > div:nth-child(1) > a:nth-child(1)');
-            const results = await page.evaluate(() => {
+            /*const results = await page.evaluate(() => {
                 let a = {};
                 let i = 1;
                 while (i <= 101) {
                     console.log(i);
                     let namez = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(3) > a:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(1)`).innerText;
-                    a[namez] = {};
+                    a[namez] = {};*/
                     //a[namez].rank = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(2) > p:nth-child(1)`).innerText;
-                    a[namez].name = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(3) > a:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(1)`).innerText;
+                    /*a[namez].name = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(3) > a:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(1)`).innerText;*/
                     //a[namez].symbol = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(3) > a:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > p:nth-child(2)`).innerText;
-                    a[namez].price = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(4) > div:nth-child(1) > a:nth-child(1)`).innerText;
+                    /*a[namez].price = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(4) > div:nth-child(1) > a:nth-child(1)`).innerText;*/
                     //a[namez].price_24h = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(5) > span:nth-child(1)`).innerText;
                     //a[namez].price_7d = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(6) > div:nth-child(1) > span:nth-child(1)`).innerText;
                     //a[namez].marketcap = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(7) > p:nth-child(1)`).innerText;
                     //a[namez].volume_fiat = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(8) > div:nth-child(1) > a:nth-child(1) > p:nth-child(1)`).innerText;
                     //a[namez].volume_btc = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(8) > div:nth-child(1) > p:nth-child(2)`).innerText;
                     //a[namez].circulating_supply = document.querySelector(`.cmc-table > tbody:nth-child(3) > tr:nth-child(${i}) > td:nth-child(9) > div:nth-child(1) > div:nth-child(1) > p:nth-child(2)`).innerText;
-                    i++;
+                    /*i++;
                 }
                 return { a }
             })
@@ -306,10 +305,10 @@ function refreshCmc() {
             setTimeout(refreshCmc, settings.retry.investing);
         }
     })();
-};
+};*/
 //refreshCmc();
-exports.refreshInvesting = refreshInvesting;
-exports.investing = investing;
+/*exports.refreshInvesting = refreshInvesting;
+exports.investing = investing;*/
 exports.refreshTvTA = refreshTvTA;
 exports.tvTA = tvTA;
 exports.tvApi = tvApi;
