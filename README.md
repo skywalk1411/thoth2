@@ -18,9 +18,9 @@ Require:
  
  Features:
  - Web Apis
- - - /api?r=24hrMiniTicker,allsides,zerohedge,commodities,finances,forexes,futures,indices,indexes,investing,metals,war,tvta
+ - - /api?r=24hrMiniTicker,allsides,zerohedge,forexes,futures,indices,metals,tvta,weed,alltvta
  - - /api?r=24hrMiniTicker require &s=<symbol>
  - Web Server
- - - /public/index, test, war, indices, futures, forexes .html
+ - - /public/index, test, indices, futures, forexes .html
  image: https://imgur.com/rtRst0L
 
