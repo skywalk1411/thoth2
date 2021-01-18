@@ -35,7 +35,7 @@ let cmcApi = {
     },
 }
 const tvApi = {
-    "engines": ["BTCUSD","ETHUSD","XRPUSD","DASHUSD","LTCUSD","LINKUSD","DOTUSD"/*,"XRMUSD","ADAUSD","XLMUSD"*/],
+    "engines": ["BTCUSD", "ETHUSD", "XRPUSD", "DASHUSD", "LTCUSD", "LINKUSD", "DOTUSD", "XMRUSD", "ADAUSD", "XLMUSD"],
 }
 let cmc = {};
 let cmcCheck = false;
@@ -180,17 +180,23 @@ function fetchTvTA() {
                 results["c"].sells = asell;
                 results["c"].neutrals = aside;
                 results["c"].buys = abuy;
-                if (asell < abuy) {
-                    results["c"].trend = "buy";
+                if (asell > abuy + aside) {
+                    results["c"].trend = "s-sell!";
                 }
-                else if (asell > abuy) {
-                    results["c"].trend = "sell";
+                else if (asell > abuy && asell >= aside) {
+                    results["c"].trend = "sell"
+                }
+                else if (abuy > asell + aside) {
+                    results["c"].trend = "s-buy!";
+                }
+                else if (abuy > asell && abuy >= aside) {
+                    results["c"].trend = "buy";
                 }
                 else {
                     results["c"].trend = "neutral";
                 }
                 pushTA(symbol, results);
-                
+
             }
             await browser.close();
             consoled("tv", `puppeteer TA refresh success. `);
