@@ -19,6 +19,7 @@ Require:
  Features:
  - Web Apis
  - - /api?r=24hrMiniTicker,allsides,zerohedge,forexes,futures,indices,metals,tvta,weed,alltvta
+ - - /api?r=tvta require &s=symbol ex:btcusd,ethusd
  - - /api?r=24hrMiniTicker require &s=symbol ex: btcusdt,ethusdt
  - Web Server
  - - /public/index, test, indices, futures, forexes .html
