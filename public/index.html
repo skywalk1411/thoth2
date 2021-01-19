@@ -355,7 +355,7 @@
             };
             xhttp.open("GET", "/api?r=metals", true);
             xhttp.send();
-            setTimeout(refreshIndexes, 120000);
+            setTimeout(refreshMetals, 120000);
         };
         refreshMetals();
     </script>
@@ -377,7 +377,7 @@
             };
             xhttp.open("GET", "/api?r=futures", true);
             xhttp.send();
-            setTimeout(refreshIndexes, 60000);
+            setTimeout(refreshFutures, 60000);
         };
         refreshFutures();
     </script>
